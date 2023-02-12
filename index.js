@@ -2,7 +2,7 @@ const express = require("express"); //getting express
 const port = 8080; //port number on which our server runs
 const app = express(); //intializing express
 const users = require("./USERS_DATA.json"); //getting our users data
-
+const fs = require("fs");
 app.use(express.urlencoded({ extended: false })); //middleware
 
 /*
@@ -40,8 +40,11 @@ Task:3
 create a new user
 */
 app.post("/api/users", (req, res) => {
-  console.log(req.body);
-  res.json({ status: "pending" });
+  const body = req.body;
+  users.push({ ...body, id: users.length + 1 });
+  fs.writeFile("./USERS_DATA.json", JSON.stringify(users), (err, data) => {
+    return res.json({ status: "ok", id: users.length + 1 });
+  });
 });
 
 //starting our app
