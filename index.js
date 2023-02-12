@@ -3,6 +3,8 @@ const port = 8080; //port number on which our server runs
 const app = express(); //intializing express
 const users = require("./USERS_DATA.json"); //getting our users data
 
+app.use(express.urlencoded({ extended: false })); //middleware
+
 /*
 Task:1
 GET Request to get all the users
@@ -31,6 +33,15 @@ app.get("/api/users/:id", (req, res) => {
   const id = Number(req.params.id);
   const user = users.find((user) => user.id === id);
   res.send(user);
+});
+
+/*
+Task:3
+create a new user
+*/
+app.post("/api/users", (req, res) => {
+  console.log(req.body);
+  res.json({ status: "pending" });
 });
 
 //starting our app
