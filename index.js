@@ -3,7 +3,31 @@ const port = 8080; //port number on which our server runs
 const app = express(); //intializing express
 const users = require("./USERS_DATA.json"); //getting our users data
 const fs = require("fs");
+const os = require("os");
 app.use(express.urlencoded({ extended: false })); //middleware
+
+//custom middleware
+/* this is my custom middleware which will create a log file 
+whenever a request is made*/
+app.use((req, res, next) => {
+  const log = ` 
+  date: ${new Date()},
+  osType: ${os.type()},
+  url: ${req.url},
+  method:${req.method}
+  
+`;
+  if (req.url === "/favicon.ico") {
+    return res.end();
+  }
+  fs.appendFile("logs.txt", log, (err, data) => {
+    if (err) {
+      return res.json({ status: "error", message: err.message });
+    } else {
+      next();
+    }
+  });
+});
 
 /*
 Task:1
