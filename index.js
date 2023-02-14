@@ -13,6 +13,7 @@ app.get("/api/users", (req, res) => {
   res.json(users);
 });
 /*
+
 Task:2
 Generate HTML DOC
 */
@@ -25,6 +26,7 @@ app.get("/users", (req, res) => {
 
   res.send(html);
 });
+
 /*
 Task:3
 get the user of given ID for suppose ID:1
@@ -32,6 +34,8 @@ get the user of given ID for suppose ID:1
 app.get("/api/users/:id", (req, res) => {
   const id = Number(req.params.id);
   const user = users.find((user) => user.id === id);
+  if (!user)
+    return res.status(404).json({ status: "error", message: "User not found" });
   res.send(user);
 });
 
@@ -73,15 +77,14 @@ app.delete("/api/users/:id", (req, res) => {
   const id = Number(req.params.id);
   const users = JSON.parse(fs.readFileSync("./USERS_DATA.json", "utf-8"));
   const user = users.findIndex((user) => user.id === id);
-  
-  if (!user || user === -1)
+  if (!user)
     return res.status(404).json({ status: "error", message: "User not found" });
 
   users.splice(user, 1);
   fs.writeFile("./USERS_DATA.json", JSON.stringify(users), (err) => {
     return res
       .status(err ? 500 : 200)
-      .json({ status: err ? "error" : "deleted"});
+      .json({ status: err ? "error" : "deleted" });
   });
 });
 
